@@ -1,13 +1,23 @@
 package br.com.szpbl.loanapi.dto.request;
 
 import br.com.szpbl.loanapi.entities.Address;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CustomerDTO {
     private Long id;
 
@@ -27,10 +37,10 @@ public class CustomerDTO {
     private String rg;
 
     @Valid
-    @NotEmpty
+    @NotNull
     private Address address;
 
-    @NotEmpty
+    @NotNull
     private double income;
 
     @NotEmpty
