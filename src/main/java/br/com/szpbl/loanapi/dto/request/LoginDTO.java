@@ -4,24 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddressDTO {
-
-    private Long id;
+public class LoginDTO {
 
     @NotEmpty
-    private String streetAddress;
+    @Email
+    private String email;
 
     @NotEmpty
-    private int number;
-
-    private String secondaryAddress;
-
-    @NotEmpty
-    private String cep;
+    private String password;
 }
