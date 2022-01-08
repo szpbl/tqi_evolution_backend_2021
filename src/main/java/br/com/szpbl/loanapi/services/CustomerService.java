@@ -2,12 +2,9 @@ package br.com.szpbl.loanapi.services;
 
 import br.com.szpbl.loanapi.dto.mapper.CustomerMapper;
 import br.com.szpbl.loanapi.dto.request.CustomerDTO;
-import br.com.szpbl.loanapi.dto.request.LoginDTO;
 import br.com.szpbl.loanapi.dto.response.CustomerResponseDTO;
-import br.com.szpbl.loanapi.dto.response.MessageResponseDTO;
 import br.com.szpbl.loanapi.entities.Customer;
 import br.com.szpbl.loanapi.exceptions.CustomerNotFoundException;
-import br.com.szpbl.loanapi.exceptions.UnauthorizedException;
 import br.com.szpbl.loanapi.repositories.CustomerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,21 +33,11 @@ public class CustomerService {
         return customerMapper.toDTO(customer);
     }
 
-    public MessageResponseDTO login(LoginDTO loginDTO) throws UnauthorizedException {
-        String message;
-        Customer customer = customerRepository.findByEmail(loginDTO.getEmail()).orElseThrow(() -> new UnauthorizedException("Wrong e-mail or password!"));
-        if (loginDTO.getPassword().equals(customer.getPassword())) {
-                customer.setLoggedIn(true);
-                customerRepository.save(customer);
-                message = String.format("Welcome, %s!", customer.getName());
-        } else {
-            throw new UnauthorizedException("Wrong e-mail or password!");
-        }
-
-        return MessageResponseDTO.builder()
-                .message(message)
-                .build();
+    public Customer findCustomerById(Long id) throws CustomerNotFoundException {
+        return customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException("Customer not found!"));
     }
 
-
+    public Customer findCustomerByEmail(String email) throws CustomerNotFoundException {
+        return customerRepository.findByEmail(email).orElseThrow(() -> new CustomerNotFoundException("Customer not found!"));
+    }
 }

@@ -9,7 +9,6 @@ import br.com.szpbl.loanapi.entities.Loan;
 import br.com.szpbl.loanapi.exceptions.CustomerNotFoundException;
 import br.com.szpbl.loanapi.exceptions.InvalidLoanException;
 import br.com.szpbl.loanapi.exceptions.UnauthorizedException;
-import br.com.szpbl.loanapi.repositories.CustomerRepository;
 import br.com.szpbl.loanapi.repositories.LoanRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class LoanService {
 
     private final LoanMapper loanMapper;
     private LoanRepository loanRepository;
-    private CustomerRepository customerRepository;
+    private CustomerService customerService;
 
     public LoanResponseDTO generateLoan(LoanDTO loanDTO, Long id) throws Exception {
 
@@ -34,7 +33,7 @@ public class LoanService {
         LocalDate firstPaymentDate = loan.getFirstPayment();
         boolean isTranchesNumberValid = loan.getTranches() >= 1 && loan.getTranches() <= 60;
         boolean isDateValid = loan.getFirstPayment().isBefore(limitDate) || loan.getFirstPayment().equals(limitDate);
-        Customer customer = findCustomerById(id);
+        Customer customer = customerService.findCustomerById(id);
 
         if (!customer.isLoggedIn()) {
             throw new UnauthorizedException("Customer not logged in!");
@@ -58,7 +57,7 @@ public class LoanService {
     }
 
     public List<LoanDTO> listLoans(Long id) throws CustomerNotFoundException {
-        Customer customer = findCustomerById(id);
+        Customer customer = customerService.findCustomerById(id);
         List<Loan> loans = customer.getLoans();
 
         return loans.stream().map(loanMapper::toDTO).collect(Collectors.toList());
@@ -70,14 +69,12 @@ public class LoanService {
         LocalDate firstPaymentDate = loan.getFirstPayment();
         LoanDTO loanDTO = loanMapper.toDTO(loan);
 
-        Customer customer = findCustomerById(loanDTO.getCustomerId());
+        Customer customer = customerService.findCustomerById(loanDTO.getCustomerId());
 
         return new LoanDetailResponseDTO(loanDTO.getId(), loanDTO.getLoanAmount(), firstPaymentDate, loanDTO.getTranches(), customer.getEmail(), customer.getIncome());
     }
 
-    private Customer findCustomerById(Long id) throws CustomerNotFoundException {
-        return customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException("Customer not found!"));
-    }
+
 
 
 }
