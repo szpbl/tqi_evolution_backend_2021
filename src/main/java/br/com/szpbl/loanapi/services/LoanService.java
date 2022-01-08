@@ -2,6 +2,7 @@ package br.com.szpbl.loanapi.services;
 
 import br.com.szpbl.loanapi.dto.mapper.LoanMapper;
 import br.com.szpbl.loanapi.dto.request.LoanDTO;
+import br.com.szpbl.loanapi.dto.response.ListLoanResponseDTO;
 import br.com.szpbl.loanapi.dto.response.LoanDetailResponseDTO;
 import br.com.szpbl.loanapi.dto.response.LoanResponseDTO;
 import br.com.szpbl.loanapi.entities.Customer;
@@ -53,23 +54,34 @@ public class LoanService {
             throw new InvalidLoanException(message);
         }
 
-        return new LoanResponseDTO(loan.getId(), loanDTO.getLoanAmount(), firstPaymentDate, loanDTO.getTranches(), loanDTO.getCustomerId());
+        return new LoanResponseDTO(loan.getId(), loanDTO.getLoanAmount(), firstPaymentDate, loanDTO.getTranches());
     }
 
-    public List<LoanDTO> listLoans(Long id) throws CustomerNotFoundException {
+    public ListLoanResponseDTO listLoans(Long id) throws CustomerNotFoundException, UnauthorizedException {
         Customer customer = customerService.findCustomerById(id);
+
+        if (!customer.isLoggedIn()) {
+            throw new UnauthorizedException("Customer not logged in!");
+        }
+
         List<Loan> loans = customer.getLoans();
 
-        return loans.stream().map(loanMapper::toDTO).collect(Collectors.toList());
+        List<LoanDTO> loanDTOS = loans.stream().map(loanMapper::toDTO).collect(Collectors.toList());
+
+        return new ListLoanResponseDTO(customer.getId(), customer.getName(), loanDTOS);
     }
 
-    public LoanDetailResponseDTO getLoanDetail(Long id) throws CustomerNotFoundException {
+    public LoanDetailResponseDTO getLoanDetail(Long id) throws CustomerNotFoundException, UnauthorizedException {
 
         Loan loan = loanRepository.getById(id);
         LocalDate firstPaymentDate = loan.getFirstPayment();
         LoanDTO loanDTO = loanMapper.toDTO(loan);
 
         Customer customer = customerService.findCustomerById(loanDTO.getCustomerId());
+
+        if (!customer.isLoggedIn()) {
+            throw new UnauthorizedException("Customer not logged in!");
+        }
 
         return new LoanDetailResponseDTO(loanDTO.getId(), loanDTO.getLoanAmount(), firstPaymentDate, loanDTO.getTranches(), customer.getEmail(), customer.getIncome());
     }

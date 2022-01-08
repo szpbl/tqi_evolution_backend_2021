@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class LoanDetailResponseDTO {
 
-    private Long id;
+    private Long loanId;
 
     private double amount;
 

@@ -1,9 +1,11 @@
 package br.com.szpbl.loanapi.controllers;
 
 import br.com.szpbl.loanapi.dto.request.LoanDTO;
+import br.com.szpbl.loanapi.dto.response.ListLoanResponseDTO;
 import br.com.szpbl.loanapi.dto.response.LoanDetailResponseDTO;
 import br.com.szpbl.loanapi.dto.response.LoanResponseDTO;
 import br.com.szpbl.loanapi.exceptions.CustomerNotFoundException;
+import br.com.szpbl.loanapi.exceptions.UnauthorizedException;
 import br.com.szpbl.loanapi.services.LoanService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +35,12 @@ public class LoanController {
     }
 
     @GetMapping("client/{id}")
-    public List<LoanDTO> getLoans(@PathVariable Long id) throws CustomerNotFoundException {
+    public ListLoanResponseDTO getLoans(@PathVariable Long id) throws Exception {
         return loanService.listLoans(id);
     }
 
     @GetMapping("detail/{id}")
-    public LoanDetailResponseDTO getLoanDetail(@PathVariable Long id) throws CustomerNotFoundException {
+    public LoanDetailResponseDTO getLoanDetail(@PathVariable Long id) throws Exception {
         return loanService.getLoanDetail(id);
     }
 }

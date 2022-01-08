@@ -19,5 +19,4 @@ public class LoanResponseDTO {
 
     private int tranches;
 
-    private Long customerId;
 }
