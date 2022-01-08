@@ -3,7 +3,6 @@ package br.com.szpbl.loanapi.controllers;
 import br.com.szpbl.loanapi.dto.request.LoanDTO;
 import br.com.szpbl.loanapi.dto.response.LoanDetailResponseDTO;
 import br.com.szpbl.loanapi.dto.response.LoanResponseDTO;
-import br.com.szpbl.loanapi.dto.response.MessageResponseDTO;
 import br.com.szpbl.loanapi.exceptions.CustomerNotFoundException;
 import br.com.szpbl.loanapi.services.LoanService;
 import lombok.AllArgsConstructor;
