@@ -5,6 +5,7 @@ import br.com.szpbl.loanapi.dto.request.CustomerDTO;
 import br.com.szpbl.loanapi.dto.request.LoginDTO;
 import br.com.szpbl.loanapi.dto.response.MessageResponseDTO;
 import br.com.szpbl.loanapi.entities.Customer;
+import br.com.szpbl.loanapi.exceptions.FailedLoginException;
 import br.com.szpbl.loanapi.repositories.CustomerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +25,19 @@ public class CustomerService {
         Customer savedCustomer = customerRepository.save(customer);
 
         return MessageResponseDTO.builder()
-                .message(savedCustomer.getName()
-                        + " registered successfully with id "
-                        + savedCustomer.getId())
+                .message(String.format("%s registered successfully with id %d", savedCustomer.getName(), savedCustomer.getId()))
                 .build();
     }
 
-    public MessageResponseDTO login(LoginDTO loginDTO) throws Exception {
-        String message = "";
-        Customer customer = customerRepository.findByEmail(loginDTO.getEmail()).orElseThrow(Exception::new);
-        if (loginDTO.getPassword().equals(customer.getPassword())){
-            customer.setLoggedIn(true);
-            customerRepository.save(customer);
-            message = "Welcome, " + customer.getName() + "!";
+    public MessageResponseDTO login(LoginDTO loginDTO) throws FailedLoginException {
+        String message;
+        Customer customer = customerRepository.findByEmail(loginDTO.getEmail()).orElseThrow(FailedLoginException::new);
+        if (loginDTO.getPassword().equals(customer.getPassword())) {
+                customer.setLoggedIn(true);
+                customerRepository.save(customer);
+                message = "Welcome, " + customer.getName() + "!";
         } else {
-            message = "Wrong e-mail or password!";
+            throw new FailedLoginException();
         }
 
         return MessageResponseDTO.builder()
