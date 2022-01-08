@@ -10,6 +10,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomerService {
@@ -31,6 +35,14 @@ public class CustomerService {
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found!"));
 
         return customerMapper.toDTO(customer);
+    }
+
+    public List<CustomerDTO> listCustomers(){
+        List<Customer> customers = new ArrayList<>(customerRepository.findAll());
+
+        return customers.stream()
+                .map(customerMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     public Customer findCustomerById(Long id) throws CustomerNotFoundException {

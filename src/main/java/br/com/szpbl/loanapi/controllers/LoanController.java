@@ -4,8 +4,6 @@ import br.com.szpbl.loanapi.dto.request.LoanDTO;
 import br.com.szpbl.loanapi.dto.response.ListLoanResponseDTO;
 import br.com.szpbl.loanapi.dto.response.LoanDetailResponseDTO;
 import br.com.szpbl.loanapi.dto.response.LoanResponseDTO;
-import br.com.szpbl.loanapi.exceptions.CustomerNotFoundException;
-import br.com.szpbl.loanapi.exceptions.UnauthorizedException;
 import br.com.szpbl.loanapi.services.LoanService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/loans")

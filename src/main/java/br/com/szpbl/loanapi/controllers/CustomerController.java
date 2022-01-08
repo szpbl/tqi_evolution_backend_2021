@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customers")
@@ -30,10 +31,17 @@ public class CustomerController {
         return customerService.register(customerDTO);
     }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<CustomerDTO> listCustomers(){
+        return customerService.listCustomers();
+    }
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerDTO getById(@PathVariable Long id) throws CustomerNotFoundException {
         return customerService.getCustomer(id);
     }
+
 
 }
