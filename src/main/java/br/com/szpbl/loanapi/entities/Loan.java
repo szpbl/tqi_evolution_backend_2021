@@ -1,6 +1,7 @@
 package br.com.szpbl.loanapi.entities;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Loan {
@@ -30,4 +32,6 @@ public class Loan {
     @Column(nullable = false)
     private int tranches;
 
+    @Column(nullable = false)
+    private Long customerId;
 }

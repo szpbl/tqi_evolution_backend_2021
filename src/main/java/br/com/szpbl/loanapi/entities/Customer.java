@@ -38,7 +38,7 @@ public class Customer {
     @Column(nullable = false, unique = true)
     private String rg;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
     @Column(nullable = false)

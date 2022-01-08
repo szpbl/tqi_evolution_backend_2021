@@ -3,8 +3,10 @@ package br.com.szpbl.loanapi.services;
 import br.com.szpbl.loanapi.dto.mapper.CustomerMapper;
 import br.com.szpbl.loanapi.dto.request.CustomerDTO;
 import br.com.szpbl.loanapi.dto.request.LoginDTO;
+import br.com.szpbl.loanapi.dto.response.CustomerResponseDTO;
 import br.com.szpbl.loanapi.dto.response.MessageResponseDTO;
 import br.com.szpbl.loanapi.entities.Customer;
+import br.com.szpbl.loanapi.exceptions.CustomerNotFoundException;
 import br.com.szpbl.loanapi.exceptions.UnauthorizedException;
 import br.com.szpbl.loanapi.repositories.CustomerRepository;
 import lombok.AllArgsConstructor;
@@ -19,14 +21,19 @@ public class CustomerService {
 
     private final CustomerMapper customerMapper;
 
-    public MessageResponseDTO register(CustomerDTO customerDTO) {
+    public CustomerResponseDTO register(CustomerDTO customerDTO) {
         Customer customer = customerMapper.toModel(customerDTO);
         customer.setLoggedIn(false);
         Customer savedCustomer = customerRepository.save(customer);
 
-        return MessageResponseDTO.builder()
-                .message(String.format("%s registered successfully with id %d", savedCustomer.getName(), savedCustomer.getId()))
-                .build();
+        return new CustomerResponseDTO(savedCustomer.getId(), savedCustomer.getName(), savedCustomer.getEmail(), savedCustomer.getCpf(), savedCustomer.getRg(), savedCustomer.getAddress(), savedCustomer.getIncome());
+    }
+
+    public CustomerDTO getCustomer(Long id) throws CustomerNotFoundException {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found!"));
+
+        return customerMapper.toDTO(customer);
     }
 
     public MessageResponseDTO login(LoginDTO loginDTO) throws UnauthorizedException {
@@ -44,5 +51,6 @@ public class CustomerService {
                 .message(message)
                 .build();
     }
+
 
 }

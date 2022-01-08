@@ -24,5 +24,8 @@ public class LoanDTO {
     @Min(1)
     private int tranches;
 
+    @NotNull
+    private Long customerId;
+
 
 }
