@@ -5,8 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -15,14 +14,15 @@ public class LoanDTO {
 
     private Long id;
 
-    @NotEmpty
+    @NotNull
     private double loanAmount;
 
-    @NotEmpty
-    private LocalDate firstPayment;
+    @NotNull
+    private String firstPayment;
 
-    @NotEmpty
+    @NotNull
     @Min(1)
     private int tranches;
+
 
 }

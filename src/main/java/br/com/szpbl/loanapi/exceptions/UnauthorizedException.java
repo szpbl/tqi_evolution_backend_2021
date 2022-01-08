@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
-public class FailedLoginException extends Exception{
+public class UnauthorizedException extends Exception{
 
-    public FailedLoginException(){
-        super("Wrong e-mail or password!");
+    public UnauthorizedException(String message){
+        super(message);
     }
 }

@@ -5,7 +5,7 @@ import br.com.szpbl.loanapi.dto.request.CustomerDTO;
 import br.com.szpbl.loanapi.dto.request.LoginDTO;
 import br.com.szpbl.loanapi.dto.response.MessageResponseDTO;
 import br.com.szpbl.loanapi.entities.Customer;
-import br.com.szpbl.loanapi.exceptions.FailedLoginException;
+import br.com.szpbl.loanapi.exceptions.UnauthorizedException;
 import br.com.szpbl.loanapi.repositories.CustomerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +29,15 @@ public class CustomerService {
                 .build();
     }
 
-    public MessageResponseDTO login(LoginDTO loginDTO) throws FailedLoginException {
+    public MessageResponseDTO login(LoginDTO loginDTO) throws UnauthorizedException {
         String message;
-        Customer customer = customerRepository.findByEmail(loginDTO.getEmail()).orElseThrow(FailedLoginException::new);
+        Customer customer = customerRepository.findByEmail(loginDTO.getEmail()).orElseThrow(() -> new UnauthorizedException("Wrong e-mail or password!"));
         if (loginDTO.getPassword().equals(customer.getPassword())) {
                 customer.setLoggedIn(true);
                 customerRepository.save(customer);
-                message = "Welcome, " + customer.getName() + "!";
+                message = String.format("Welcome, %s!", customer.getName());
         } else {
-            throw new FailedLoginException();
+            throw new UnauthorizedException("Wrong e-mail or password!");
         }
 
         return MessageResponseDTO.builder()

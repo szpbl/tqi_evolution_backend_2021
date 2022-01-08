@@ -2,7 +2,7 @@ package br.com.szpbl.loanapi.controllers;
 
 import br.com.szpbl.loanapi.dto.request.LoginDTO;
 import br.com.szpbl.loanapi.dto.response.MessageResponseDTO;
-import br.com.szpbl.loanapi.exceptions.FailedLoginException;
+import br.com.szpbl.loanapi.exceptions.UnauthorizedException;
 import br.com.szpbl.loanapi.services.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class LoginController {
     private final CustomerService customerService;
 
     @PutMapping
-    public MessageResponseDTO login(@RequestBody LoginDTO loginDTO) throws FailedLoginException {
+    public MessageResponseDTO login(@RequestBody LoginDTO loginDTO) throws UnauthorizedException {
         return customerService.login(loginDTO);
     }
 }
